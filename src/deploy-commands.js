@@ -1,8 +1,10 @@
 require('dotenv').config();
 const {REST, Routes}=require('discord.js');
 const pingCommand=require('./commands/ping');
+const testdbCommand = require('./commands/testdb');
 const commands = [
-    pingCommand.data.toJSON()
+    pingCommand.data.toJSON(),
+    testdbCommand.data.toJSON()
 ];
 const rest=new REST({version:'10'}).setToken(process.env.DISCORD_TOKEN);
 const CLIENT_ID = '1527370633279967393';

@@ -1,3 +1,4 @@
+require("./database/database");
 // Load environment variables
 require('dotenv').config();
 // Import discord.js classes
@@ -18,9 +19,13 @@ client.once('clientReady',()=>{
 client.login(process.env.DISCORD_TOKEN);
 // Adding ping command
 const pingCommand = require('./commands/ping');
+//Adding testDb command
+const testdbCommand = require('./commands/testdb')
 client.on('interactionCreate',async(interaction)=>{
     if(!interaction.isChatInputCommand()) return;
     if (interaction.commandName === 'ping'){
         await pingCommand.execute(interaction);
+    } else if (interaction.commandName === "testdb"){
+        await testdbCommand.execute(interaction);
     }
 });
