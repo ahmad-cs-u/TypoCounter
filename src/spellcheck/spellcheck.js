@@ -1,5 +1,6 @@
 // src/spellcheck/spellcheck.js
 const nspell = require("nspell");
+const { isWhitelisted } = require("../whitelist/whitelist");
 
 async function loadDictionary() {
     const dictionaryEn = (await import("dictionary-en")).default;
@@ -17,4 +18,20 @@ async function isMisspelled(word) {
     return !spell.correct(word);
 }
 
-module.exports = { isMisspelled };
+const {normalizeMessage} = require("./normalize");
+
+async function findTypos(text,guildId){
+    const words = normalizeMessage(text);
+    const typos = [];
+
+    for (const word of words){
+        if (isWhitelisted(word,guildId)) continue;
+        if (await isMisspelled(word)){
+            typos.push(word);
+        }
+    }
+
+    return typos;
+}
+
+module.exports = { isMisspelled, findTypos };

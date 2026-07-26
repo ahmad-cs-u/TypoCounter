@@ -1,0 +1,13 @@
+fps
+rpg
+mmorpg
+npc
+pvp
+pve
+buff
+debuff
+nerf
+respawn
+speedrun
+multiplayer
+coop

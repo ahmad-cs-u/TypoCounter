@@ -81,6 +81,15 @@ try {
     },
     getLeaderboard(guildId, limit = 10) {
         return statements.getLeaderboard.all(guildId, limit);
+    },
+    getWhitelistWord(guildId, word) {
+        return statements.getWhitelistWord.get(guildId, word);
+    },
+    addWhitelistWord(guildId, word, addedBy) {
+        return statements.addWhitelistWord.run(guildId, word, addedBy);
+    },
+    removeWhitelistWord(guildId, word) {
+        return statements.removeWhitelistWord.run(guildId, word);
     }
   };
   
