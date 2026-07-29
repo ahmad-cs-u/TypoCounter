@@ -20,13 +20,19 @@ async function isMisspelled(word) {
 
 const {normalizeMessage} = require("./normalize");
 
-async function findTypos(text,guildId){
+async function findTypos(text, guildId) {
     const words = normalizeMessage(text);
+    const seen = new Set();
     const typos = [];
 
-    for (const word of words){
-        if (isWhitelisted(word,guildId)) continue;
-        if (await isMisspelled(word)){
+    for (const word of words) {
+        const normalized = word.toLowerCase();
+
+        if (seen.has(normalized)) continue; // already counted this word for this message
+        if (isWhitelisted(word, guildId)) continue;
+
+        if (await isMisspelled(word)) {
+            seen.add(normalized);
             typos.push(word);
         }
     }

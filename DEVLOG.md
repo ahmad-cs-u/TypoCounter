@@ -29,3 +29,17 @@
 ## Next Session
 - Implement global and server-wide whitelist to avoid slang etc
 - Implement other quality of life improvements
+
+# 2026-07-29
+
+## Completed
+- The bot is fully functional now
+- Global Whitelist works
+- Server-wise whitelist works
+- Words can be added and removed
+
+## Issues found
+- So the Database didn't allow adding two typos in the same text, but the checker was doing that, so I fixed that using a dedupe
+
+## Next Session
+- Statistics section
