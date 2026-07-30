@@ -44,3 +44,18 @@ ON whitelist(guild_id, word);
 
 CREATE UNIQUE INDEX IF NOT EXISTS typo_message_unique
 ON typo_log(message_id, word);
+
+
+CREATE TABLE IF NOT EXISTS ignored_channels (
+    guild_id TEXT NOT NULL,
+    channel_id TEXT NOT NULL,
+
+    PRIMARY KEY (guild_id, channel_id)
+);
+
+CREATE TABLE IF NOT EXISTS ignored_roles (
+    guild_id TEXT NOT NULL,
+    role_id TEXT NOT NULL,
+
+    PRIMARY KEY (guild_id, role_id)
+);

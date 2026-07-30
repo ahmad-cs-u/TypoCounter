@@ -54,6 +54,51 @@ try {
         DELETE FROM whitelist
         WHERE guild_id = ?
           AND word = ?
+    `),
+    getRecentTypos: db.prepare(`
+        SELECT word, detected_at
+        FROM typo_log
+        WHERE guild_id = ? AND user_id = ?
+        ORDER BY detected_at DESC
+        LIMIT ?
+    `),
+    getGuildSettings: db.prepare(`
+        SELECT * FROM guild_settings 
+        WHERE guild_id = ?`
+    ),
+    disableSpellcheck: db.prepare(`
+        INSERT OR REPLACE INTO guild_settings (guild_id, auto_spellcheck) 
+        VALUES (?, 0)
+    `),
+    enableSpellcheck: db.prepare(`
+        DELETE FROM guild_settings 
+        WHERE guild_id = ?
+    `),
+    addIgnoredChannel: db.prepare(`
+        INSERT OR IGNORE INTO ignored_channels (guild_id, channel_id) 
+        VALUES (?, ?)
+    `),
+    removeIgnoredChannel: db.prepare(`
+        DELETE FROM ignored_channels 
+        WHERE guild_id = ? 
+        AND channel_id = ?
+    `),
+    getIgnoredChannels: db.prepare(`
+        SELECT channel_id 
+        FROM ignored_channels 
+        WHERE guild_id = ?
+    `),
+    addIgnoredRole: db.prepare(`INSERT OR IGNORE INTO ignored_roles (guild_id, role_id) 
+        VALUES (?, ?)
+    `),
+    removeIgnoredRole: db.prepare(`DELETE FROM ignored_roles 
+        WHERE guild_id = ? 
+        AND role_id = ?
+    `),
+    getIgnoredRoles: db.prepare(`
+        SELECT role_id 
+        FROM ignored_roles 
+        WHERE guild_id = ?
     `)
   };
   
@@ -90,6 +135,38 @@ try {
     },
     removeWhitelistWord(guildId, word) {
         return statements.removeWhitelistWord.run(guildId, word);
+    },
+    getRecentTypos(userId, guildId, limit = 10) {
+        return statements.getRecentTypos.all(guildId, userId, limit);
+    },
+    isSpellcheckEnabled(guildId) {
+        const row = statements.getGuildSettings.get(guildId);
+        return !row || row.auto_spellcheck === 1; // no row = enabled by default
+    },
+    setSpellcheckEnabled(guildId, enabled) {
+        if (enabled) {
+            statements.enableSpellcheck.run(guildId);
+        } else {
+            statements.disableSpellcheck.run(guildId);
+        }
+    },
+    addIgnoredChannel(guildId, channelId) {
+        return statements.addIgnoredChannel.run(guildId, channelId);
+    },
+    removeIgnoredChannel(guildId, channelId) {
+        return statements.removeIgnoredChannel.run(guildId, channelId);
+    },
+    getIgnoredChannels(guildId) {
+        return statements.getIgnoredChannels.all(guildId).map(row => row.channel_id);
+    },
+    addIgnoredRole(guildId, roleId) {
+        return statements.addIgnoredRole.run(guildId, roleId);
+    },
+    removeIgnoredRole(guildId, roleId) {
+        return statements.removeIgnoredRole.run(guildId, roleId);
+    },
+    getIgnoredRoles(guildId) {
+        return statements.getIgnoredRoles.all(guildId).map(row => row.role_id);
     }
   };
   

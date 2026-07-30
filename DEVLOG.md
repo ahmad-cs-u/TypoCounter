@@ -43,3 +43,16 @@
 
 ## Next Session
 - Statistics section
+
+# 2026-07-31
+
+## Completed
+- /stats, /leaderboard and /recent commands have been added
+
+## Problems encountered
+- /recent required a little bit of change in the databse.js file but nothing serious
+
+## Next Session
+- Enable/disable autocheck
+- Channel immunity
+- Role immunity

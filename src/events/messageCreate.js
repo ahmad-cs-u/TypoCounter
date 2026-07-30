@@ -17,19 +17,28 @@ function buildReply(username,word){
 module.exports = {
     name: 'messageCreate',
     once: false,
-    async execute(message){
+    async execute(message) {
         if (message.author.bot) return;
         if (!message.content || message.content.trim().length === 0) return;
 
-        const userId = message.author.id;
         const guildId = message.guild.id;
 
-        const typos=await findTypos(message.content,guildId);
+        if (!db.isSpellcheckEnabled(guildId)) return;
+
+        const ignoredChannels = db.getIgnoredChannels(guildId);
+        if (ignoredChannels.includes(message.channel.id)) return;
+
+        const ignoredRoles = db.getIgnoredRoles(guildId);
+        const memberRoleIds = message.member.roles.cache.map(role => role.id);
+        if (memberRoleIds.some(roleId => ignoredRoles.includes(roleId))) return;
+
+        const userId = message.author.id;
+        const typos = await findTypos(message.content, guildId);
         if (typos.length === 0) return;
 
-        for (const word of typos){
-            db.incrementTypos(userId,guildId);
-            db.logTypo(message.id,guildId,userId,word);
+        for (const word of typos) {
+            db.incrementTypos(userId, guildId);
+            db.logTypo(message.id, guildId, userId, word);
         }
 
         const reply = buildReply(message.author.username, typos[0]);
