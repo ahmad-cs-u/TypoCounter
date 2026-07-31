@@ -1,0 +1,4 @@
+[2026-07-31T15:09:55.947Z] [ERROR] [ERROR] Unhandled error in event "messageCreate": SqliteError: UNIQUE constraint failed: typo_log.message_id, typo_log.word
+    at Object.logTypo (D:\Data\Personal Projects\TypoCounter\src\database\database.js:120:35)
+    at Object.execute (D:\Data\Personal Projects\TypoCounter\src\events\messageCreate.js:41:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)

@@ -29,7 +29,7 @@ module.exports = {
         if (ignoredChannels.includes(message.channel.id)) return;
 
         const ignoredRoles = db.getIgnoredRoles(guildId);
-        const memberRoleIds = message.member.roles.cache.map(role => role.id);
+        const memberRoleIds = message.member ? message.member.roles.cache.map(role => role.id) : [];
         if (memberRoleIds.some(roleId => ignoredRoles.includes(roleId))) return;
 
         const userId = message.author.id;

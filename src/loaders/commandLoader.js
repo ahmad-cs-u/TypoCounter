@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const { Collection } = require("discord.js");
+const logger = require("../utils/logger");
 
 function loadCommands(){
     const commands = new Collection();
@@ -14,7 +15,7 @@ function loadCommands(){
         if ("data" in command && "execute" in command){
             commands.set(command.data.name, command);
         } else {
-            console.warn(`[WARNING] Command at ${filePath} is missing "data" or "execute"; skipped.`);
+            logger.warn(`[WARNING] Command at ${filePath} is missing "data" or "execute"; skipped.`);
         }
     }
     return commands;
