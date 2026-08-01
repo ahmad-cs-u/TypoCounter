@@ -27,7 +27,7 @@ async function findTypos(text, guildId) {
     for (const word of words) {
         const normalized = word.toLowerCase();
 
-//       if (seen.has(normalized)) continue; // already counted this word for this message
+       if (seen.has(normalized)) continue; // already counted this word for this message
         if (isWhitelisted(word, guildId)) continue;
 
         if (await isMisspelled(word)) {

@@ -7,6 +7,8 @@ const {Client,GatewayIntentBits}=require('discord.js');
 const loadCommands = require('./loaders/commandLoader');
 // Load events
 const loadEvents = require('./loaders/eventLoader');
+// Load keepAlive server
+const {startKeepAliveServer} = require("./keepAlive");
 // Load logger
 const logger = require("./utils/logger");
 // To handle fatal errors
@@ -18,12 +20,11 @@ let resetTimer = null;
 
 function handleFatalError(type, error) {
     errorCount++;
-    console.error(`[ERROR-AVOIDED] ${type} (${errorCount}/${MAX_ERRORS}):`, error);
+    logger.error(`[ERROR-AVOIDED] ${type} (${errorCount}/${MAX_ERRORS}):`, error);
 
-    // Restart the "stability clock" every time an error happens
     if (resetTimer) clearTimeout(resetTimer);
     resetTimer = setTimeout(() => {
-        console.log("[INFO] No errors for a while — resetting error counter.");
+        logger.info("No errors for a while — resetting error counter.");
         errorCount = 0;
     }, STABILITY_RESET_MS);
 
@@ -47,6 +48,7 @@ const client = new Client({
 
 client.commands = loadCommands();
 loadEvents(client);
-
+// Start Server
+startKeepAliveServer(process.env.PORT||3000);
 // Login
 client.login(process.env.DISCORD_TOKEN);
